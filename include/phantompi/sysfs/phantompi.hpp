@@ -5,7 +5,7 @@
 #include <cstdio>
 
 #include <phantompi/sysfs/gpio.hpp>
-#include <phantompi/sysfs/io.hpp>
+#include <phantompi/file.hpp>
 #include <phantompi/handle.hpp>
 
 namespace phantompi
@@ -19,7 +19,7 @@ namespace phantompi
                 std::array<char, 3> buffer; // two bytes for id, one for null-terminator
                 auto size = std::snprintf(buffer.data(), buffer.size(), "%d", id);
 
-                File file{path};
+                File file{path, File::Mode::output};
                 file.write(buffer.data(), size);
             };
 

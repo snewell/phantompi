@@ -1,3 +1,3 @@
-make_test(io_test
-            io_test.cpp
+make_test(file_test
+            file_test.cpp
          )

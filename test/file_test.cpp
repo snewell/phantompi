@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <phantompi/sysfs/io.hpp>
+#include <phantompi/file.hpp>
 
 TEST(Io, write)
 {
-    phantompi::sysfs::File test{"test.txt"};
+    phantompi::File test{"test.txt", phantompi::File::Mode::output};
 
     std::string data = "Test";
     auto ret = test.write(data.c_str(), data.length());
@@ -13,7 +13,7 @@ TEST(Io, write)
 
 TEST(Io, read)
 {
-    phantompi::sysfs::File test{"test.txt"};
+    phantompi::File test{"test.txt", phantompi::File::Mode::input};
 
     char data[5];
     auto ret = test.read(data, 4);
