@@ -1,1 +1,1 @@
-#include <phantompi/phantompi.hpp>
+#include <phantompi/sysfs/phantompi.hpp>

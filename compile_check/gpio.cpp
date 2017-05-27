@@ -1,1 +1,1 @@
-#include <phantompi/gpio.hpp>
+#include <phantompi/sysfs/gpio.hpp>
