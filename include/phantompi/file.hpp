@@ -21,8 +21,9 @@ namespace phantompi
             bidirectional = O_RDWR
         };
 
+        template <typename ...MODES>
         File(char const * path,
-             Mode         mode);
+             MODES        ...modes);
 
         ~File() noexcept;
 
@@ -30,6 +31,15 @@ namespace phantompi
         int fd() noexcept;
 
     private:
+        static constexpr int buildMode_inner(Mode mode) noexcept;
+
+        template <typename ...MODES>
+        static constexpr int buildMode_inner(Mode     mode,
+                                             MODES ...modes) noexcept;
+
+        template <typename ...MODES>
+        static constexpr int buildMode(MODES ...modes) noexcept;
+
         int _fd;
     };
 
@@ -53,10 +63,29 @@ namespace phantompi
                           std::size_t         length);
     };
 
-    inline File::File(char const * path,
-                      Mode         mode)
+    constexpr int File::buildMode_inner(Mode mode) noexcept
     {
-        _fd = ::open(path, static_cast<std::underlying_type_t<Mode>>(mode));
+        return static_cast<std::underlying_type_t<Mode>>(mode);
+    }
+
+    template <typename ...MODES>
+    constexpr int File::buildMode_inner(Mode     mode,
+                                        MODES ...modes) noexcept
+    {
+        return buildMode_inner(mode) | buildMode_inner(modes...);
+    }
+
+    template <typename ...MODES>
+    constexpr int File::buildMode(MODES ...modes) noexcept
+    {
+        return buildMode_inner(modes...);
+    }
+
+    template <typename ...MODES>
+    inline File::File(char const * path,
+                      MODES        ...modes)
+    {
+        _fd = ::open(path, buildMode(modes...)); //static_cast<std::underlying_type_t<Mode>>(mode));
     }
 
     inline File::~File() noexcept
