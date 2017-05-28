@@ -66,7 +66,7 @@ namespace phantompi
             ret = std::snprintf(directionPath.data(), directionPath.size(),
                                 "/sys/class/gpio/gpio%d/direction", id);
 
-            File directionFile{directionPath.data(), File::Mode::output};
+            OutputFile directionFile{directionPath.data()};
             ret = directionFile.write(direction, directionSize);
         }
 
@@ -82,7 +82,7 @@ namespace phantompi
         inline std::size_t OutputGpio::write(BYTE        const * data,
                                             std::size_t         length)
         {
-            File value{valuePath(), File::Mode::output};
+            OutputFile value{valuePath()};
             return value.write(data, length);
         }
 
@@ -93,7 +93,7 @@ namespace phantompi
         inline std::size_t InputGpio::read(BYTE        * data,
                                         std::size_t   length)
         {
-            File value{valuePath(), File::Mode::input};
+            InputFile value{valuePath()};
             return value.read(data, length);
         }
     }

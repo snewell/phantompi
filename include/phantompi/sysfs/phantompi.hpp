@@ -19,7 +19,7 @@ namespace phantompi
                 std::array<char, 3> buffer; // two bytes for id, one for null-terminator
                 auto size = std::snprintf(buffer.data(), buffer.size(), "%d", id);
 
-                File file{path, File::Mode::output};
+                OutputFile file{path};
                 file.write(buffer.data(), size);
             };
 

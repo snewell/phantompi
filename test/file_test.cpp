@@ -4,7 +4,7 @@
 
 TEST(Io, write)
 {
-    phantompi::File test{"test.txt", phantompi::File::Mode::output};
+    phantompi::OutputFile test{"test.txt"};
 
     std::string data = "Test";
     auto ret = test.write(data.c_str(), data.length());
@@ -13,7 +13,7 @@ TEST(Io, write)
 
 TEST(Io, read)
 {
-    phantompi::File test{"test.txt", phantompi::File::Mode::input};
+    phantompi::InputFile test{"test.txt"};
 
     char data[5];
     auto ret = test.read(data, 4);
