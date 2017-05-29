@@ -4,7 +4,7 @@
 
 TEST(Io, write)
 {
-    phantompi::OutputFile test{"test.txt"};
+    auto test = phantompi::OutputFile::createFile("test.txt", phantompi::OutputFile::Permissions::owner_read);
 
     std::string data = "Test";
     auto ret = test.write(data.c_str(), data.length());
