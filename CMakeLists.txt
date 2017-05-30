@@ -25,3 +25,13 @@ include_directories(include)
 add_subdirectory(compile_check)
 add_subdirectory(example)
 add_subdirectory(test)
+
+install(FILES
+            include/phantompi/file.hpp
+            include/phantompi/handle.hpp
+        DESTINATION include/phantompi)
+
+install(FILES
+            include/phantompi/sysfs/gpio.hpp
+            include/phantompi/sysfs/phantompi.hpp
+        DESTINATION include/phantompi/sysfs)
