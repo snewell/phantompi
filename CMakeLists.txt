@@ -23,4 +23,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(include)
 
 add_subdirectory(compile_check)
+add_subdirectory(example)
 add_subdirectory(test)

@@ -62,7 +62,7 @@ namespace phantompi
             auto ret = std::snprintf(_valuePath.data(), _valuePath.size(),
                                     "/sys/class/gpio/gpio%d/value", id);
 
-            std::array<char, 32> directionPath;
+            std::array<char, 40> directionPath;
             ret = std::snprintf(directionPath.data(), directionPath.size(),
                                 "/sys/class/gpio/gpio%d/direction", id);
 

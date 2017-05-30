@@ -25,6 +25,10 @@ namespace phantompi
 
         template <typename ...MODES>
         File(char const * path,
+             MODES        ...modes);
+
+        template <typename ...MODES>
+        File(char const * path,
              int          permissions,
              MODES        ...modes);
 
@@ -114,6 +118,13 @@ namespace phantompi
     constexpr int File::buildMode(MODES ...modes) noexcept
     {
         return buildMode_inner(modes...);
+    }
+
+    template <typename ...MODES>
+    inline File::File(char const * path,
+                      MODES        ...modes)
+    {
+        _fd = ::open(path, buildMode(modes...));
     }
 
     template <typename ...MODES>
