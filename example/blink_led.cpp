@@ -21,9 +21,9 @@ int main(int     argc,
 
     while(count > 0)
     {
-        ledGpio->setState(phantompi::sysfs::Gpio::State::high);
+        ledGpio->setState(phantompi::GpioState::high);
         usleep(500000);
-        ledGpio->setState(phantompi::sysfs::Gpio::State::low);
+        ledGpio->setState(phantompi::GpioState::low);
         usleep(500000);
         --count;
     }

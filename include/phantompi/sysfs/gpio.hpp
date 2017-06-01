@@ -7,6 +7,7 @@
 #include <cstdio>
 
 #include <phantompi/file.hpp>
+#include <phantompi/types.hpp>
 
 namespace phantompi
 {
@@ -15,12 +16,6 @@ namespace phantompi
         class Gpio
         {
         public:
-            enum class State
-            {
-                low  = 0,
-                high = 1
-            };
-
             std::uint8_t id() const noexcept;
 
         protected:
@@ -45,7 +40,7 @@ namespace phantompi
             std::size_t write(BYTE        const * data,
                             std::size_t         length);
 
-            void setState(State state);
+            void setState(GpioState state);
         };
 
         class InputGpio final : public Gpio
@@ -53,7 +48,7 @@ namespace phantompi
         public:
             InputGpio(std::uint8_t id);
 
-            State getState() const;
+            GpioState getState() const;
         };
 
         inline std::uint8_t Gpio::id() const noexcept
@@ -100,23 +95,23 @@ namespace phantompi
         inline OutputGpio::OutputGpio(std::uint8_t id)
         : Gpio{id, "out", 3} { }
 
-        inline void OutputGpio::setState(State state)
+        inline void OutputGpio::setState(GpioState state)
         {
             static char const * strings[2] = { "0", "1" };
 
             OutputFile value{valuePath()};
-            value.write(strings[static_cast<std::underlying_type_t<State>>(state)], 1);
+            value.write(strings[static_cast<std::underlying_type_t<GpioState>>(state)], 1);
         }
 
         inline InputGpio::InputGpio(std::uint8_t id)
         : Gpio{id, "in", 2} { }
 
-        inline auto InputGpio::getState() const -> State
+        inline GpioState InputGpio::getState() const
         {
             char buffer;
             InputFile value{valuePath()};
             value.read(&buffer, 1);
-            return (buffer == '1') ? State::high : State::low;
+            return (buffer == '1') ? GpioState::high : GpioState::low;
         }
     }
 }
