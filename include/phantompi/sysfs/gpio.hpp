@@ -2,6 +2,7 @@
 #define PHANTOMPI_SYSFS_GPIO_HPP 1
 
 #include <array>
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 
@@ -14,6 +15,12 @@ namespace phantompi
         class Gpio
         {
         public:
+            enum class State
+            {
+                low  = 0,
+                high = 1
+            };
+
             std::uint8_t id() const noexcept;
 
         protected:
@@ -24,7 +31,8 @@ namespace phantompi
             char const * valuePath() const noexcept;
 
         private:
-            std::array<char, 32> _valuePath;
+            using Path = std::array<char, 32>;
+            Path _valuePath;
             std::uint8_t const _id;
         };
 
@@ -36,6 +44,8 @@ namespace phantompi
             template <typename BYTE>
             std::size_t write(BYTE        const * data,
                             std::size_t         length);
+
+            void setState(State state);
         };
 
         class InputGpio final : public Gpio
@@ -43,10 +53,7 @@ namespace phantompi
         public:
             InputGpio(std::uint8_t id);
 
-            template <typename BYTE>
-            std::size_t read(BYTE        * data,
-                            std::size_t   length);
-
+            State getState() const;
         };
 
         inline std::uint8_t Gpio::id() const noexcept
@@ -59,15 +66,30 @@ namespace phantompi
                         std::size_t          directionSize)
         : _id{id}
         {
-            auto ret = std::snprintf(_valuePath.data(), _valuePath.size(),
-                                    "/sys/class/gpio/gpio%d/value", id);
+#ifndef NDEBUG
+            auto ret =
+#endif
+                std::snprintf(_valuePath.data(), _valuePath.size(),
+                              "/sys/class/gpio/gpio%d/value", id);
+            assert(ret > 0);
+            assert(static_cast<Path::size_type>(ret) < _valuePath.size());
 
-            std::array<char, 40> directionPath;
-            ret = std::snprintf(directionPath.data(), directionPath.size(),
-                                "/sys/class/gpio/gpio%d/direction", id);
+            using DirectionPath = std::array<char, 40>;
+            DirectionPath directionPath;
+#ifndef NDEBUG
+            ret =
+#endif
+                std::snprintf(directionPath.data(), directionPath.size(),
+                              "/sys/class/gpio/gpio%d/direction", id);
+            assert(ret > 0);
+            assert(static_cast<DirectionPath::size_type>(ret) < _valuePath.size());
 
             OutputFile directionFile{directionPath.data()};
-            ret = directionFile.write(direction, directionSize);
+            auto wrote = directionFile.write(direction, directionSize);
+            if(wrote != directionSize)
+            {
+                throw std::runtime_error{"Failed to set GPIO direction"};
+            }
         }
 
         inline char const * Gpio::valuePath() const noexcept
@@ -78,23 +100,23 @@ namespace phantompi
         inline OutputGpio::OutputGpio(std::uint8_t id)
         : Gpio{id, "out", 3} { }
 
-        template <typename BYTE>
-        inline std::size_t OutputGpio::write(BYTE        const * data,
-                                            std::size_t         length)
+        inline void OutputGpio::setState(State state)
         {
+            static char const * strings[2] = { "0", "1" };
+
             OutputFile value{valuePath()};
-            return value.write(data, length);
+            value.write(strings[static_cast<std::underlying_type_t<State>>(state)], 1);
         }
 
         inline InputGpio::InputGpio(std::uint8_t id)
         : Gpio{id, "in", 2} { }
 
-        template <typename BYTE>
-        inline std::size_t InputGpio::read(BYTE        * data,
-                                        std::size_t   length)
+        inline auto InputGpio::getState() const -> State
         {
+            char buffer;
             InputFile value{valuePath()};
-            return value.read(data, length);
+            value.read(&buffer, 1);
+            return (buffer == 1) ? State::high : State::low;
         }
     }
 }

@@ -3,7 +3,9 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <cstdint>
@@ -31,6 +33,14 @@ namespace phantompi
         File(char const * path,
              int          permissions,
              MODES        ...modes);
+
+        File(File const&) = delete;
+
+        File& operator = (File const&) = delete;
+
+        File(File &&file) noexcept;
+
+        File& operator = (File &&file) noexcept;
 
         ~File() noexcept;
 
@@ -125,6 +135,11 @@ namespace phantompi
                       MODES        ...modes)
     {
         _fd = ::open(path, buildMode(modes...));
+        if(_fd == -1)
+        {
+            auto error = errno;
+            throw std::runtime_error{::strerror(error)};
+        }
     }
 
     template <typename ...MODES>
@@ -133,6 +148,23 @@ namespace phantompi
                       MODES        ...modes)
     {
         _fd = ::open(path, buildMode(modes...), permissions);
+        if(_fd == -1)
+        {
+            auto error = errno;
+            throw std::runtime_error{::strerror(error)};
+        }
+    }
+
+    inline File::File(File &&file) noexcept
+     : _fd{file._fd}
+    {
+        file._fd = -1;
+    }
+
+    inline File& File::operator = (File &&file) noexcept
+    {
+        std::swap(_fd, file._fd);
+        return *this;
     }
 
     inline File::~File() noexcept
@@ -189,6 +221,11 @@ namespace phantompi
         static_assert(sizeof(BYTE) == 1, "BYTE type is not a byte");
 
         auto ret = ::read(fd(), data, length);
+        if(ret == -1)
+        {
+            auto error = errno;
+            throw std::runtime_error{::strerror(error)};
+        }
         return ret;
     }
 
@@ -202,6 +239,11 @@ namespace phantompi
         while(length > 0)
         {
             auto ret = ::write(fd(), data + wrote, length);
+            if(ret == -1)
+            {
+                auto error = errno;
+                throw std::runtime_error{::strerror(error)};
+            }
             wrote += ret;
             length -= ret;
         }
