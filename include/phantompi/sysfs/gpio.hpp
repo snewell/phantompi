@@ -116,7 +116,7 @@ namespace phantompi
             char buffer;
             InputFile value{valuePath()};
             value.read(&buffer, 1);
-            return (buffer == 1) ? State::high : State::low;
+            return (buffer == '1') ? State::high : State::low;
         }
     }
 }
