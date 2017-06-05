@@ -4,3 +4,6 @@ add_executable(blink_led
 add_executable(pull_down
                     pull_down.cpp
               )
+add_executable(pull_up
+                    pull_up.cpp
+              )
