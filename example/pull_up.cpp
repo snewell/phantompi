@@ -5,6 +5,8 @@
 #include <phantompi/sysfs/phantompi.hpp>
 #include <phantompi/button.hpp>
 
+#include "button_example.hpp"
+
 int main(int argc,
          char ** argv)
 {
@@ -20,15 +22,10 @@ int main(int argc,
     auto buttonGpio = phantompi::sysfs::accessInputGpio(gpio);
     auto button = makePullUpButton(buttonGpio);
 
-    char const * const messages[] = {
-        "not pressed",
-        "pressed"
-    };
     while(count > 0)
     {
         usleep(500000);
-        auto const state = button.getState();
-        std::printf("Button is %s\n", messages[static_cast<std::underlying_type_t<phantompi::ButtonState>>(state)]);
+        checkButton(button);
         --count;
     }
     return 0;
