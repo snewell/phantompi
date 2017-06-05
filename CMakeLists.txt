@@ -27,8 +27,10 @@ add_subdirectory(example)
 add_subdirectory(test)
 
 install(FILES
+            include/phantompi/button.hpp
             include/phantompi/file.hpp
             include/phantompi/handle.hpp
+            include/phantompi/types.hpp
         DESTINATION include/phantompi)
 
 install(FILES
