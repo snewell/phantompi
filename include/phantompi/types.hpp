@@ -11,7 +11,7 @@ namespace phantompi
 
     enum class GpioState
     {
-        low  = 0,
+        low = 0,
         high = 1
     };
 }

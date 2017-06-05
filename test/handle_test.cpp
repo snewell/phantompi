@@ -4,16 +4,14 @@
 
 TEST(Handle, makeHandle)
 {
-    auto handle = phantompi::makeHandle(10, []() { });
+    auto handle = phantompi::makeHandle(10, []() {});
 }
 
 TEST(Handle, cleanupFn)
 {
     auto closed = false;
     {
-        auto handle = phantompi::makeHandle(10, [&closed] () {
-            closed = true;
-        });
+        auto handle = phantompi::makeHandle(10, [&closed]() { closed = true; });
     }
     ASSERT_TRUE(closed);
 }

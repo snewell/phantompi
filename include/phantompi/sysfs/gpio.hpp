@@ -19,9 +19,8 @@ namespace phantompi
             std::uint8_t id() const noexcept;
 
         protected:
-            Gpio(std::uint8_t         id,
-                char         const * direction,
-                std::size_t          directionSize);
+            Gpio(std::uint8_t id, char const * direction,
+                 std::size_t directionSize);
 
             char const * valuePath() const noexcept;
 
@@ -37,8 +36,7 @@ namespace phantompi
             OutputGpio(std::uint8_t id);
 
             template <typename BYTE>
-            std::size_t write(BYTE        const * data,
-                            std::size_t         length);
+            std::size_t write(BYTE const * data, std::size_t length);
 
             void setState(GpioState state);
         };
@@ -56,10 +54,9 @@ namespace phantompi
             return _id;
         }
 
-        inline Gpio::Gpio(std::uint8_t         id,
-                        char         const * direction,
-                        std::size_t          directionSize)
-        : _id{id}
+        inline Gpio::Gpio(std::uint8_t id, char const * direction,
+                          std::size_t directionSize)
+          : _id{id}
         {
 #ifndef NDEBUG
             auto ret =
@@ -77,7 +74,8 @@ namespace phantompi
                 std::snprintf(directionPath.data(), directionPath.size(),
                               "/sys/class/gpio/gpio%d/direction", id);
             assert(ret > 0);
-            assert(static_cast<DirectionPath::size_type>(ret) < _valuePath.size());
+            assert(static_cast<DirectionPath::size_type>(ret) <
+                   _valuePath.size());
 
             OutputFile directionFile{directionPath.data()};
             auto wrote = directionFile.write(direction, directionSize);
@@ -93,18 +91,24 @@ namespace phantompi
         }
 
         inline OutputGpio::OutputGpio(std::uint8_t id)
-        : Gpio{id, "out", 3} { }
+          : Gpio{id, "out", 3}
+        {
+        }
 
         inline void OutputGpio::setState(GpioState state)
         {
-            static char const * strings[2] = { "0", "1" };
+            static char const * strings[2] = {"0", "1"};
 
             OutputFile value{valuePath()};
-            value.write(strings[static_cast<std::underlying_type_t<GpioState>>(state)], 1);
+            value.write(
+                strings[static_cast<std::underlying_type_t<GpioState>>(state)],
+                1);
         }
 
         inline InputGpio::InputGpio(std::uint8_t id)
-        : Gpio{id, "in", 2} { }
+          : Gpio{id, "in", 2}
+        {
+        }
 
         inline GpioState InputGpio::getState() const
         {

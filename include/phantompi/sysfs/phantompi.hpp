@@ -4,9 +4,9 @@
 #include <array>
 #include <cstdio>
 
-#include <phantompi/sysfs/gpio.hpp>
 #include <phantompi/file.hpp>
 #include <phantompi/handle.hpp>
+#include <phantompi/sysfs/gpio.hpp>
 
 namespace phantompi
 {
@@ -16,8 +16,10 @@ namespace phantompi
         inline auto accessGpio(std::uint8_t id)
         {
             auto writeFile = [id](char const * path) {
-                std::array<char, 3> buffer; // two bytes for id, one for null-terminator
-                auto size = std::snprintf(buffer.data(), buffer.size(), "%d", id);
+                std::array<char, 3>
+                    buffer; // two bytes for id, one for null-terminator
+                auto size =
+                    std::snprintf(buffer.data(), buffer.size(), "%d", id);
 
                 OutputFile file{path};
                 file.write(buffer.data(), size);
@@ -29,7 +31,16 @@ namespace phantompi
 
             writeFile("/sys/class/gpio/export");
 
-            return makeHandle(T{id}, closeFn);
+            try
+            {
+                T t{id};
+                return makeHandle(std::move(t), closeFn);
+            }
+            catch(...)
+            {
+                closeFn();
+                throw;
+            }
         }
 
         inline auto accessInputGpio(std::uint8_t id)

@@ -11,13 +11,13 @@ namespace phantompi
     public:
         Handle(T t, CLOSE_FN closeFn);
 
-        T& operator * () noexcept;
+        T & operator*() noexcept;
 
-        T const& operator * () const noexcept;
+        T const & operator*() const noexcept;
 
-        T* operator -> () noexcept;
+        T * operator->() noexcept;
 
-        T const* operator -> () const noexcept;
+        T const * operator->() const noexcept;
 
         ~Handle() noexcept;
 
@@ -34,29 +34,31 @@ namespace phantompi
 
     template <typename T, typename CLOSE_FN>
     inline Handle<T, CLOSE_FN>::Handle(T t, CLOSE_FN closeFn)
-      : _t{std::move(t)},
-        _closeFn{std::move(closeFn)} { }
+      : _t{std::move(t)}
+      , _closeFn{std::move(closeFn)}
+    {
+    }
 
     template <typename T, typename CLOSE_FN>
-    inline T& Handle<T, CLOSE_FN>::operator * () noexcept
+    inline T & Handle<T, CLOSE_FN>::operator*() noexcept
     {
         return _t;
     }
 
     template <typename T, typename CLOSE_FN>
-    inline T const& Handle<T, CLOSE_FN>::operator * () const noexcept
+    inline T const & Handle<T, CLOSE_FN>::operator*() const noexcept
     {
         return _t;
     }
 
     template <typename T, typename CLOSE_FN>
-    T* Handle<T, CLOSE_FN>::operator -> () noexcept
+    T * Handle<T, CLOSE_FN>::operator->() noexcept
     {
         return &_t;
     }
 
     template <typename T, typename CLOSE_FN>
-    T const* Handle<T, CLOSE_FN>::operator -> () const noexcept
+    T const * Handle<T, CLOSE_FN>::operator->() const noexcept
     {
         return &_t;
     }

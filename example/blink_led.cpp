@@ -1,12 +1,11 @@
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 
 #include <unistd.h>
 
 #include <phantompi/sysfs/phantompi.hpp>
 
-int main(int     argc,
-         char ** argv)
+int main(int argc, char ** argv)
 {
     if(argc != 3)
     {

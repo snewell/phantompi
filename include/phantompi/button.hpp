@@ -3,11 +3,12 @@
 
 namespace phantompi
 {
-    template <typename INPUT_GPIO, GpioState PUSHED_VALUE, GpioState UNPUSHED_VALUE>
+    template <typename INPUT_GPIO, GpioState PUSHED_VALUE,
+              GpioState UNPUSHED_VALUE>
     class Button
     {
     public:
-        Button(INPUT_GPIO const &input);
+        Button(INPUT_GPIO const & input);
 
         ButtonState getState() const;
 
@@ -22,28 +23,32 @@ namespace phantompi
     using PullUpButton = Button<INPUT_GPIO, GpioState::high, GpioState::low>;
 
     template <typename INPUT_GPIO>
-    auto makePullDownButton(INPUT_GPIO const &input)
+    auto makePullDownButton(INPUT_GPIO const & input)
     {
         return PullDownButton<INPUT_GPIO>(input);
     }
 
     template <typename INPUT_GPIO>
-    auto makePullUpButton(INPUT_GPIO const &input)
+    auto makePullUpButton(INPUT_GPIO const & input)
     {
         return PullUpButton<INPUT_GPIO>(input);
     }
 
-    template <typename INPUT_GPIO, GpioState PUSHED_VALUE, GpioState UNPUSHED_VALUE>
-    inline Button<INPUT_GPIO, PUSHED_VALUE, UNPUSHED_VALUE>::Button(INPUT_GPIO const &input)
-      : _inputGpio{&input} { }
-
-    template <typename INPUT_GPIO, GpioState PUSHED_VALUE, GpioState UNPUSHED_VALUE>
-    inline ButtonState Button<INPUT_GPIO, PUSHED_VALUE, UNPUSHED_VALUE>::getState() const
+    template <typename INPUT_GPIO, GpioState PUSHED_VALUE,
+              GpioState UNPUSHED_VALUE>
+    inline Button<INPUT_GPIO, PUSHED_VALUE, UNPUSHED_VALUE>::Button(
+        INPUT_GPIO const & input)
+      : _inputGpio{&input}
     {
-        static ButtonState const states[] = {
-            ButtonState::not_pressed,
-            ButtonState::pressed
-        };
+    }
+
+    template <typename INPUT_GPIO, GpioState PUSHED_VALUE,
+              GpioState UNPUSHED_VALUE>
+    inline ButtonState
+    Button<INPUT_GPIO, PUSHED_VALUE, UNPUSHED_VALUE>::getState() const
+    {
+        static ButtonState const states[] = {ButtonState::not_pressed,
+                                             ButtonState::pressed};
         auto state = (*_inputGpio)->getState();
         return states[state == PUSHED_VALUE];
     }

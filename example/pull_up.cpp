@@ -2,13 +2,12 @@
 
 #include <unistd.h>
 
-#include <phantompi/sysfs/phantompi.hpp>
 #include <phantompi/button.hpp>
+#include <phantompi/sysfs/phantompi.hpp>
 
 #include "button_example.hpp"
 
-int main(int argc,
-         char ** argv)
+int main(int argc, char ** argv)
 {
     if(argc != 3)
     {
