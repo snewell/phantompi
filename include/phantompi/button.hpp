@@ -1,6 +1,8 @@
 #ifndef PHANTOMPI_BUTTON_HPP
 #define PHANTOMPI_BUTTON_HPP 1
 
+#include <phantompi/types.hpp>
+
 namespace phantompi
 {
     template <typename INPUT_GPIO, GpioState PUSHED_VALUE,
