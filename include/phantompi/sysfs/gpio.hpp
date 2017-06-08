@@ -35,9 +35,6 @@ namespace phantompi
         public:
             OutputGpio(std::uint8_t id);
 
-            template <typename BYTE>
-            std::size_t write(BYTE const * data, std::size_t length);
-
             void setState(GpioState state);
         };
 
