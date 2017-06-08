@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include <phantompi/led.hpp>
 #include <phantompi/sysfs/phantompi.hpp>
 
 int main(int argc, char ** argv)
@@ -17,12 +18,13 @@ int main(int argc, char ** argv)
     auto count = std::atoi(argv[2]);
 
     auto ledGpio = phantompi::sysfs::accessOutputGpio(gpio);
+    auto led = phantompi::makeLed(ledGpio);
 
     while(count > 0)
     {
-        ledGpio->setState(phantompi::GpioState::high);
+        led.turnOn();
         usleep(500000);
-        ledGpio->setState(phantompi::GpioState::low);
+        led.turnOff();
         usleep(500000);
         --count;
     }
