@@ -1,14 +1,14 @@
 #ifndef PHANTOMPI_FILE_HPP
 #define PHANTOMPI_FILE_HPP 1
 
-#include <errno.h>
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <cerrno>
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 
 namespace phantompi
@@ -91,14 +91,16 @@ namespace phantompi
         std::size_t write(BYTE const * data, std::size_t length);
 
     private:
-        static constexpr int buildPerms_inner(Permissions perm) noexcept;
+        static constexpr int buildPerms_inner(Permissions permission) noexcept;
 
         template <typename... PERMISSIONS>
-        static constexpr int buildPerms_inner(Permissions perm,
-                                              PERMISSIONS... perms) noexcept;
+        static constexpr int
+        buildPerms_inner(Permissions permission,
+                         PERMISSIONS... permissions) noexcept;
 
         template <typename... PERMISSIONS>
-        static constexpr int buildPermissions(PERMISSIONS... perms) noexcept;
+        static constexpr int
+        buildPermissions(PERMISSIONS... permissions) noexcept;
 
         template <typename... MODES>
         OutputFile(char const * path, int permissions, MODES... modes);
@@ -175,16 +177,17 @@ namespace phantompi
     {
     }
 
-    constexpr int OutputFile::buildPerms_inner(Permissions perm) noexcept
+    constexpr int OutputFile::buildPerms_inner(Permissions permission) noexcept
     {
-        return static_cast<std::underlying_type_t<Permissions>>(perm);
+        return static_cast<std::underlying_type_t<Permissions>>(permission);
     }
 
     template <typename... PERMISSIONS>
-    constexpr int OutputFile::buildPerms_inner(Permissions perm,
-                                               PERMISSIONS... perms) noexcept
+    constexpr int
+    OutputFile::buildPerms_inner(Permissions permission,
+                                 PERMISSIONS... permissions) noexcept
     {
-        return buildPerms_inner(perm) | buildPerms_inner(perms...);
+        return buildPerms_inner(permission) | buildPerms_inner(permissions...);
     }
 
     template <typename... PERMISSIONS>

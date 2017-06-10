@@ -12,7 +12,7 @@ int main(int argc, char ** argv)
     if(argc != 3)
     {
         std::printf("Usage: %s <gpio> <count>\n", argv[0]);
-        return (argc == 1);
+        return static_cast<int>(argc == 1);
     }
 
     auto gpio = std::atoi(argv[1]);
