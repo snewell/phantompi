@@ -3,4 +3,5 @@ add_executable(compile_check
                     handle.cpp
                     main.cpp
                     phantompi.cpp
+                    memmap.cpp
               )
