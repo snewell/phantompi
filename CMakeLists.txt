@@ -32,7 +32,7 @@ if(BUILD_TESTS)
         add_test(${test} ${test} "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${test}_results.xml")
     endfunction()
 else()
-    function(create_test name)
+    function(make_test test)
         #do nothing
     endfunction()
 endif()
