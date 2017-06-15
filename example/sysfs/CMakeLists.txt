@@ -1,9 +1,9 @@
-add_executable(blink_led
+add_executable(sysfs_blink_led
                blink_led.cpp
         )
-add_executable(pull_down
+add_executable(sysfs_pull_down
                pull_down.cpp
         )
-add_executable(pull_up
+add_executable(sysfs_pull_up
                pull_up.cpp
         )

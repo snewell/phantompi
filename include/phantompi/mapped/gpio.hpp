@@ -49,7 +49,8 @@ namespace phantompi
         }
 
         inline Gpio::Gpio(std::uint8_t id, GpioDirection direction)
-                : _id{id}, map{GpioMap::get()}
+          : _id{id}
+          , map{GpioMap::get()}
         {
             if(direction == GpioDirection::OUT)
                 map->setGpioFunction(id, GpioMap::GPIOFunction::OUTPUT);
@@ -58,8 +59,9 @@ namespace phantompi
         }
 
         inline OutputGpio::OutputGpio(std::uint8_t id)
-                : Gpio{id, Gpio::GpioDirection::OUT}
-        {}
+          : Gpio{id, Gpio::GpioDirection::OUT}
+        {
+        }
 
         inline void OutputGpio::setState(GpioState state)
         {
@@ -70,8 +72,9 @@ namespace phantompi
         }
 
         inline InputGpio::InputGpio(std::uint8_t id)
-                : Gpio{id, Gpio::GpioDirection::IN}
-        {}
+          : Gpio{id, Gpio::GpioDirection::IN}
+        {
+        }
 
         inline GpioState InputGpio::getState() const
         {
@@ -80,4 +83,4 @@ namespace phantompi
     }
 }
 
-#endif //PHANTOMPI_MAPPED_GPIO_HPP
+#endif // PHANTOMPI_MAPPED_GPIO_HPP

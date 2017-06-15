@@ -3,8 +3,8 @@
 
 #include <phantompi/types.hpp>
 
-#include <sys/mman.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #include <memory>
@@ -44,43 +44,42 @@ namespace phantompi
             {
                 auto funcSel = getFunctionSelect(id);
 
-                *funcSel &= ~(7<<(((id)%10)*3)); // Clear function bits
-                *funcSel |= (static_cast<std::uint8_t>(function)<<(((id)%10)*3)); //Set Function bits
+                *funcSel &= ~(7 << (((id) % 10) * 3)); // Clear function bits
+                *funcSel |= (static_cast<std::uint8_t>(function)
+                             << (((id) % 10) * 3)); // Set Function bits
             }
 
             void setGpio(std::uint8_t id)
             {
-                *(gpio+7) = 1<<id;
+                *(gpio + 7) = 1 << id;
             }
 
             void clearGpio(std::uint8_t id)
             {
-                *(gpio+10) = 1<<id;
+                *(gpio + 10) = 1 << id;
             }
 
             phantompi::GpioState getGpioValue(std::uint8_t id)
             {
-                return ((*(gpio+13)&(1<<id)) > 0)? phantompi::GpioState::high: phantompi::GpioState::low;
+                return ((*(gpio + 13) & (1 << id)) > 0)
+                           ? phantompi::GpioState::high
+                           : phantompi::GpioState::low;
             }
 
             ~GpioMap()
             {
-                munmap( gpio_map, MapLength);
+                munmap(gpio_map, MapLength);
             }
 
         private:
             GpioMap()
             {
-                auto mem = open("/dev/mem", O_RDWR|O_SYNC);
+                auto mem = open("/dev/mem", O_RDWR | O_SYNC);
                 if(mem < 0)
                     throw std::runtime_error("Failed to open: /dev/mem");
 
-                gpio_map = mmap( nullptr,
-                                 MapLength,
-                                 PROT_READ|PROT_WRITE,
-                                 MAP_SHARED,
-                                 mem,
-                                 Gpio_Base_address);
+                gpio_map = mmap(nullptr, MapLength, PROT_READ | PROT_WRITE,
+                                MAP_SHARED, mem, Gpio_Base_address);
 
                 close(mem);
 
@@ -93,13 +92,14 @@ namespace phantompi
 
             volatile std::uint32_t * getFunctionSelect(std::uint8_t id)
             {
-                return gpio+((id)/10);
+                return gpio + ((id) / 10);
             }
 
             // RPI 2 & 3
             const std::uint32_t Gpio_Base_address = (0x3F000000 + 0x200000);
 
-            const std::size_t MapLength = (4*1024); // only need to 0xb0, but most ref use page size
+            const std::size_t MapLength =
+                (4 * 1024); // only need to 0xb0, but most ref use page size
 
             void * gpio_map;
             volatile std::uint32_t * gpio;
@@ -107,4 +107,4 @@ namespace phantompi
     }
 }
 
-#endif //PHANTOMPI_MAPPED_MEMMAP_HPP
+#endif // PHANTOMPI_MAPPED_MEMMAP_HPP

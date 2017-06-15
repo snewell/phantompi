@@ -9,8 +9,8 @@
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
-#include <type_traits>
 #include <stdexcept>
+#include <type_traits>
 
 namespace phantompi
 {

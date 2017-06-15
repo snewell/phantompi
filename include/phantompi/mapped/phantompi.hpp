@@ -14,7 +14,7 @@ namespace phantompi
         inline auto accessGpio(std::uint8_t id)
         {
             T t{id};
-            return makeHandle(std::move(t), [](){});;
+            return makeHandle(std::move(t), []() {});
         }
 
         inline auto accessInputGpio(std::uint8_t id)
@@ -29,4 +29,4 @@ namespace phantompi
     }
 }
 
-#endif //PHANTOMPI_MAPPED_PHANTOMPI_HPP
+#endif // PHANTOMPI_MAPPED_PHANTOMPI_HPP
