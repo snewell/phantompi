@@ -49,8 +49,8 @@ namespace phantompi
         }
 
         inline Gpio::Gpio(std::uint8_t id, GpioDirection direction)
-          : _id{id}
-          , map{GpioMap::get()}
+          : map{GpioMap::get()},
+            _id{id}
         {
             if(direction == GpioDirection::OUT)
                 map->setGpioFunction(id, GpioMap::GPIOFunction::OUTPUT);
