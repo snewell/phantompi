@@ -1,0 +1,9 @@
+add_executable(mapped_blink_led
+               blink_led.cpp
+        )
+add_executable(mapped_pull_down
+               pull_down.cpp
+        )
+add_executable(mapped_pull_up
+               pull_up.cpp
+        )

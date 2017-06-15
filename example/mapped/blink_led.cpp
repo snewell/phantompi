@@ -3,10 +3,8 @@
 
 #include <unistd.h>
 
-#include <phantompi/button.hpp>
-#include <phantompi/sysfs/phantompi.hpp>
-
-#include "button_example.hpp"
+#include <phantompi/led.hpp>
+#include <phantompi/mapped/phantompi.hpp>
 
 int main(int argc, char ** argv)
 {
@@ -19,13 +17,15 @@ int main(int argc, char ** argv)
     auto gpio = std::atoi(argv[1]);
     auto count = std::atoi(argv[2]);
 
-    auto buttonGpio = phantompi::sysfs::accessInputGpio(gpio);
-    auto button = makePullUpButton(buttonGpio);
+    auto ledGpio = phantompi::mapped::accessOutputGpio(gpio);
+    auto led = makeLed(ledGpio);
 
     while(count > 0)
     {
-        usleep(500000);
-        checkButton(button);
+        led.turnOn();
+        usleep(100000);
+        led.turnOff();
+        usleep(100000);
         --count;
     }
     return 0;

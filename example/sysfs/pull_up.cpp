@@ -6,7 +6,7 @@
 #include <phantompi/button.hpp>
 #include <phantompi/sysfs/phantompi.hpp>
 
-#include "button_example.hpp"
+#include "../button_example.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
     auto count = std::atoi(argv[2]);
 
     auto buttonGpio = phantompi::sysfs::accessInputGpio(gpio);
-    auto button = makePullDownButton(buttonGpio);
+    auto button = makePullUpButton(buttonGpio);
 
     while(count > 0)
     {
